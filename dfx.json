@@ -13,8 +13,9 @@
     },
     "backend": {
       "candid": "src/backend/backend.did",
+      "main": "src/backend/src/backend.mo",
       "package": "backend",
-      "type": "rust"
+      "type": "motoko"
     },
     "frontend": {
       "dependencies": ["backend"],

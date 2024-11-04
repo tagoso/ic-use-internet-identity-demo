@@ -8,13 +8,13 @@ export function Counter() {
   const { actor: backend } = useBackend();
   const { identity } = useInternetIdentity();
   const [loading, setLoading] = useState<boolean>(true);
-  const [counter, setCounter] = useState<number>();
+  const [counter, setCounter] = useState<number>(0);
 
   // Get counter value from backend on mount
   useEffect(() => {
     if (!backend) return;
-    backend.get_counter().then((c) => {
-      setCounter(c);
+    backend.get_counter().then((c: number) => {
+      setCounter(Number(c)); // Convert bigint to number here
       setLoading(false);
     });
   }, [backend]);
@@ -23,8 +23,8 @@ export function Counter() {
   function handleClick() {
     if (!backend) return;
     setLoading(true);
-    backend.inc_counter().then((c) => {
-      setCounter(c);
+    backend.inc_counter().then((c: number) => {
+      setCounter(Number(c)); // Convert bigint to number here
       setLoading(false);
     });
   }
@@ -43,17 +43,9 @@ export function Counter() {
     <div className="flex flex-col items-center gap-5 md:flex-row">
       Counter:
       <div className="inline-block h-8 px-5 ml-3 rounded md:h-16 bg-zinc-600">
-        {counter === undefined ? (
-          <Spinner className="w-4 h-8 md:w-10 md:h-16" />
-        ) : (
-          counter
-        )}
+        {counter === undefined ? <Spinner className="w-4 h-8 md:w-10 md:h-16" /> : counter}
       </div>
-      <button
-        onClick={handleClick}
-        className={buttonClassName}
-        disabled={loading}
-      >
+      <button onClick={handleClick} className={buttonClassName} disabled={loading}>
         {loading ? <Spinner className="w-4 h-8 md:w-10 md:h-16" /> : "+"}
       </button>
     </div>
