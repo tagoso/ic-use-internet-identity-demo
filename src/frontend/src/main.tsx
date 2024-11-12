@@ -12,10 +12,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <InternetIdentityProvider>
       <Actors>
         <App />
-        <Toaster
-          position="bottom-right"
-          containerClassName="font-sans text-4xl italic"
-        />
+        <Toaster position="bottom-right" containerClassName="font-sans text-base italic" />
       </Actors>
     </InternetIdentityProvider>
   </React.StrictMode>

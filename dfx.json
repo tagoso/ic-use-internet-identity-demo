@@ -12,8 +12,7 @@
       "frontend": {}
     },
     "backend": {
-      "candid": "src/backend/backend.did",
-      "main": "src/backend/src/backend.mo",
+      "main": "src/backend/backend.mo",
       "package": "backend",
       "type": "motoko"
     },

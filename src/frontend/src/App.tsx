@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Counter } from "./components/Counter";
+import { TextSaver } from "./components/TextSaver";
 import { LoginButton } from "./components/LoginButton";
 import Principal from "./components/Principal";
 import { useBackend } from "./ic/Actors";
@@ -24,26 +24,11 @@ function App() {
   }, [backend, identity, principal]);
 
   return (
-    <div className="flex flex-col items-center w-full gap-5 p-10 font-sans text-2xl italic md:items-start md:gap-10 md:text-6xl">
-      <img
-        src="/ic.svg"
-        alt="Internet Computer"
-        className="w-40 mb-5 md:mb-0 md:w-96"
-      />
-      <div className="text-center">
-        {identity ? "You are logged in." : "You are not logged in."}
-      </div>
+    <div className="flex flex-col items-center w-full gap-5 p-10 font-sans text-base italic md:items-start md:gap-10 md:text-base">
       <LoginButton />
+      {!identity && <div className="text-center">You are not logged in.</div>}
       <Principal principal={principal} />
-      <Counter />
-      <div className="text-center">
-        <a
-          href="https://github.com/kristoferlund/ic-use-internet-identity-demo"
-          className="underline"
-        >
-          Fork this demo.
-        </a>
-      </div>
+      <TextSaver />
     </div>
   );
 }

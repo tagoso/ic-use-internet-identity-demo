@@ -1,5 +1,4 @@
 import Spinner from "./Spinner";
-import { twMerge } from "tailwind-merge";
 import { useInternetIdentity } from "ic-use-internet-identity";
 
 export function LoginButton() {
@@ -14,12 +13,6 @@ export function LoginButton() {
     }
   }
 
-  let className =
-    "flex px-5 font-bold text-white bg-blue-500 rounded cursor-pointer h-9 md:h-16 hover:bg-blue-700 disabled:bg-blue-500/20 disabled:hover:bg-blue-500/20";
-  className = isLoggingIn
-    ? twMerge(className, "cursor-wait")
-    : twMerge(className, "cursor-pointer");
-
   const text = () => {
     if (identity) {
       return "Logout";
@@ -27,7 +20,7 @@ export function LoginButton() {
       return (
         <>
           Logging in
-          <Spinner className="w-10 h-10 ml-3 md:w-20 md:h-20" />
+          <Spinner className="ml-2" />
         </>
       );
     }
@@ -35,7 +28,18 @@ export function LoginButton() {
   };
 
   return (
-    <button onClick={handleClick} className={className} disabled={isLoggingIn}>
+    <button
+      onClick={handleClick}
+      disabled={isLoggingIn}
+      style={{
+        padding: "0.5rem 1rem",
+        backgroundColor: "#007bff",
+        color: "#fff",
+        border: "none",
+        borderRadius: "0.25rem",
+        cursor: isLoggingIn ? "wait" : "pointer",
+      }}
+    >
       {text()}
     </button>
   );
