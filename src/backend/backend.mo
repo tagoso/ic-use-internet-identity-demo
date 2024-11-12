@@ -1,20 +1,23 @@
-import Principal "mo:base/Principal";
+import Map "mo:base/HashMap";
+import Text "mo:base/Text";
 
 actor {
-    stable var storedText : Text = ""; // テキストを保持するための変数
 
-    public shared (_msg) func whoami() : async Text {
-        return Principal.toText(_msg.caller);
+    type Name = Text;
+    type Phone = Text;
+
+    type Entry = {
+        desc : Text;
+        phone : Phone;
     };
 
+    let phonebook = Map.HashMap<Name, Entry>(0, Text.equal, Text.hash);
 
-    // テキストを取得するメソッド
-    public query func get_text() : async Text {
-        return storedText;
+    public func insert(name : Name, entry : Entry) : async () {
+        phonebook.put(name, entry);
     };
 
-    // テキストを設定するメソッド
-    public func set_text(newText: Text) : async () {
-        storedText := newText;
+    public query func lookup(name : Name) : async ?Entry {
+        phonebook.get(name);
     };
 };
