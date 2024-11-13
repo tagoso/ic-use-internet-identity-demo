@@ -11,7 +11,7 @@ export default function Principal({ principal }: { principal?: string }) {
         display: "flex",
         alignItems: "center",
         gap: "0.5rem",
-        whiteSpace: "nowrap", // テキストが改行されないように設定
+        whiteSpace: "nowrap",
       }}
     >
       Your principal: {principal}

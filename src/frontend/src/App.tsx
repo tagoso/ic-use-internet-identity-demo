@@ -1,4 +1,4 @@
-import { Phonebook } from "./components/Phonebook";
+import { Entry } from "./components/Entry";
 import { LoginButton } from "./components/LoginButton";
 import Principal from "./components/Principal";
 import { useInternetIdentity } from "ic-use-internet-identity";
@@ -14,7 +14,7 @@ function App() {
       <LoginButton />
       {!identity && <div className="text-center">You are not logged in.</div>}
       {identity && <Principal principal={principal} />}
-      {identity && <Phonebook />}
+      {identity && <Entry />}
     </div>
   );
 }
