@@ -10,7 +10,7 @@ function App() {
   const principal = identity ? identity.getPrincipal().toText() : undefined;
 
   return (
-    <div className="flex flex-col items-center w-full gap-5 p-10 font-sans text-base italic md:items-start md:gap-10 md:text-base">
+    <div className="flex flex-col w-full gap-5 p-10 font-sans text-base items-start">
       <LoginButton />
       {!identity && <div className="text-center">You are not logged in.</div>}
       {identity && <Principal principal={principal} />}

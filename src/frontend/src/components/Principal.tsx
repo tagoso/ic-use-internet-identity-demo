@@ -5,6 +5,9 @@ export default function Principal({ principal }: { principal?: string }) {
 
   if (!identity || !principal) return null;
 
+  // Get the last 3 characters of the principal
+  const principalSuffix = principal.slice(-3);
+
   return (
     <div
       style={{
@@ -14,7 +17,7 @@ export default function Principal({ principal }: { principal?: string }) {
         whiteSpace: "nowrap",
       }}
     >
-      Your principal: {principal}
+      Your principal: ...{principalSuffix}
     </div>
   );
 }

@@ -32,7 +32,7 @@ export function LoginButton() {
       onClick={handleClick}
       disabled={isLoggingIn}
       style={{
-        padding: "0.5rem 1rem",
+        padding: "0.2rem 1rem",
         backgroundColor: "#007bff",
         color: "#fff",
         border: "none",

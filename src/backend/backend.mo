@@ -1,45 +1,49 @@
 import Map "mo:base/HashMap";
 import Text "mo:base/Text";
 import Iter "mo:base/Iter";
+import Time "mo:base/Time";
+import Int "mo:base/Int";
 
 actor {
 
     type Name = Text;
-    type Phone = Text;
 
     type Entry = {
-        desc : Text;
-        phone : Phone;
+        url : Text;
+        time : Text;
     };
 
-    // Initialize the phonebook as a HashMap
-    var phonebook = Map.HashMap<Name, Entry>(0, Text.equal, Text.hash);
+    // Initialize the bookmark as a HashMap
+    var bookmark = Map.HashMap<Name, Entry>(0, Text.equal, Text.hash);
 
-    // Insert a new entry into the phonebook
-    public func insert(name : Name, entry : Entry) : async () {
-        phonebook.put(name, entry);
+    // Insert a new entry into the bookmark with the current timestamp
+    public func insert(url : Text) : async () {
+        let timestamp = Time.now(); // Get current timestamp
+        let formattedTime = Int.toText(timestamp); // Convert timestamp to Text
+        let entryWithTime = { url = url; time = formattedTime }; // Create Entry with time
+        bookmark.put(url, entryWithTime);
     };
 
-    // Lookup an entry by name
-    public query func lookup(name : Name) : async ?Entry {
-        phonebook.get(name);
+    // Delete an entry by URL
+    public func deleteEntry(url : Text) : async () {
+        ignore bookmark.remove(url); // Remove entry and ignore the return value
     };
 
-    // Retrieve all entries in the phonebook
+    // Retrieve all entries in the bookmark
     public query func getAllEntries() : async [(Name, Entry)] {
-        return Iter.toArray(phonebook.entries());
+        return Iter.toArray(bookmark.entries());
     };
 
-    // Pre-upgrade hook to serialize the phonebook entries
+    // Pre-upgrade hook to serialize the bookmark entries
     system func preupgrade() {
-        stablePhonebookEntries := Iter.toArray(phonebook.entries());
+        stableBookmarkEntries := Iter.toArray(bookmark.entries());
     };
 
-    // Post-upgrade hook to deserialize the phonebook entries
+    // Post-upgrade hook to deserialize the bookmark entries
     system func postupgrade() {
-        phonebook := Map.fromIter(stablePhonebookEntries.vals(), 0, Text.equal, Text.hash);
+        bookmark := Map.fromIter(stableBookmarkEntries.vals(), 0, Text.equal, Text.hash);
     };
 
-    // Stable variable to store serialized phonebook entries
-    stable var stablePhonebookEntries : [(Name, Entry)] = [];
+    // Stable variable to store serialized bookmark entries
+    stable var stableBookmarkEntries : [(Name, Entry)] = [];
 };
