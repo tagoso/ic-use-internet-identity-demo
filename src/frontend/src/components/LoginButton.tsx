@@ -37,6 +37,7 @@ export function LoginButton() {
         color: "#fff",
         border: "none",
         borderRadius: "0.25rem",
+        marginRight: "0.5rem",
         cursor: isLoggingIn ? "wait" : "pointer",
       }}
     >
