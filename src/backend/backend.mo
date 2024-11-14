@@ -5,13 +5,16 @@ import Time "mo:base/Time";
 import Int "mo:base/Int";
 
 actor {
-
     type Name = Text;
 
     type Entry = {
         url : Text;
         time : Text;
+        clickCount : Nat; // Track the number of clicks
+        lastClicked : ?Text; // Optional field to store the last clicked timestamp
     };
+
+    stable var stableBookmarkEntries : [(Name, Entry)] = [];
 
     // Initialize the bookmark as a HashMap
     var bookmark = Map.HashMap<Name, Entry>(0, Text.equal, Text.hash);
@@ -19,14 +22,35 @@ actor {
     // Insert a new entry into the bookmark with the current timestamp
     public func insert(url : Text) : async () {
         let timestamp = Time.now(); // Get current timestamp
-        let formattedTime = Int.toText(timestamp); // Convert timestamp to Text
-        let entryWithTime = { url = url; time = formattedTime }; // Create Entry with time
+        let formattedTime = Int.toText(timestamp / 1_000_000_000); // Convert timestamp to seconds
+        let entryWithTime = {
+            url = url;
+            time = formattedTime;
+            clickCount = 0;
+            lastClicked = null;
+        };
         bookmark.put(url, entryWithTime);
     };
 
     // Delete an entry by URL
     public func deleteEntry(url : Text) : async () {
-        ignore bookmark.remove(url); // Remove entry and ignore the return value
+        ignore bookmark.remove(url);
+    };
+
+    // Increment the click count for a specific URL and update the last clicked timestamp in seconds
+    public func incrementClickCount(url : Text) : async () {
+        switch (bookmark.get(url)) {
+            case (?entry) {
+                let updatedEntry = {
+                    url = entry.url;
+                    time = entry.time;
+                    clickCount = entry.clickCount + 1;
+                    lastClicked = ?Int.toText(Time.now() / 1_000_000_000) // Update lastClicked in seconds
+                };
+                bookmark.put(url, updatedEntry);
+            };
+            case null {};
+        };
     };
 
     // Retrieve all entries in the bookmark
@@ -43,7 +67,4 @@ actor {
     system func postupgrade() {
         bookmark := Map.fromIter(stableBookmarkEntries.vals(), 0, Text.equal, Text.hash);
     };
-
-    // Stable variable to store serialized bookmark entries
-    stable var stableBookmarkEntries : [(Name, Entry)] = [];
 };

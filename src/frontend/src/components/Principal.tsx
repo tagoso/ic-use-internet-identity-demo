@@ -17,7 +17,7 @@ export default function Principal({ principal }: { principal?: string }) {
         whiteSpace: "nowrap",
       }}
     >
-      Your principal: ...{principalSuffix}
+      Anti-phishing code: {principalSuffix}
     </div>
   );
 }
