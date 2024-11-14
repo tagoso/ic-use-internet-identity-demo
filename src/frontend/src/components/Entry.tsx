@@ -51,11 +51,22 @@ export function Entry() {
   // Function to insert a new entry
   async function handleInsert() {
     if (!backend || !identity) return;
-    await backend.insert(url);
+
+    // Automatically prepend "https://" if URL does not start with "http://" or "https://"
+    const formattedUrl = /^(http:\/\/|https:\/\/)/.test(url) ? url : `https://${url}`;
+
+    // Check for duplicate URLs in entries
+    const isDuplicate = entries.some((entry) => entry.url === formattedUrl);
+    if (isDuplicate) {
+      alert("This URL is already added.");
+      return;
+    }
+
+    await backend.insert(formattedUrl);
 
     // Add the new entry at the beginning of the entries list
     setEntries([
-      { url: url, clickCount: BigInt(0), lastClicked: null, time: Math.floor(Date.now() / 1000).toString() },
+      { url: formattedUrl, clickCount: BigInt(0), lastClicked: null, time: Math.floor(Date.now() / 1000).toString() },
       ...entries,
     ]);
     setURL("");
@@ -89,7 +100,7 @@ export function Entry() {
 
   // Calculate elapsed time and format it as seconds, minutes, hours, or days
   const formatElapsedTime = (lastClicked: string | null) => {
-    if (!lastClicked) return "0";
+    if (!lastClicked) return "N/A";
     const currentTimestamp = Math.floor(Date.now() / 1000); // Current Unix timestamp in seconds
     const lastClickedTimestamp = parseInt(lastClicked, 10); // Convert lastClicked to an integer
     const elapsedSeconds = currentTimestamp - lastClickedTimestamp; // Calculate the difference in seconds
@@ -134,10 +145,17 @@ export function Entry() {
   const handleSortByLastVisit = () => {
     const currentTimestamp = Math.floor(Date.now() / 1000); // Get current Unix timestamp in seconds
     const sortedEntries = [...entries].sort((a, b) => {
+      // Prioritize entries with no lastClicked (no clicks) to be at the top
+      if (a.lastClicked === null && b.lastClicked !== null) return -1;
+      if (a.lastClicked !== null && b.lastClicked === null) return 1;
+      if (a.lastClicked === null && b.lastClicked === null) return 0;
+
+      // Otherwise, compare elapsed time
       const elapsedA = a.lastClicked ? currentTimestamp - parseInt(a.lastClicked, 10) : Infinity;
       const elapsedB = b.lastClicked ? currentTimestamp - parseInt(b.lastClicked, 10) : Infinity;
       return isLastVisitAscending ? elapsedA - elapsedB : elapsedB - elapsedA;
     });
+
     setEntries(sortedEntries);
     setIsLastVisitAscending(!isLastVisitAscending); // Toggle last visit sort order for next click
   };
@@ -193,7 +211,7 @@ export function Entry() {
     <div className="entry-container" style={{ maxWidth: "100vw", width: "min(100%, 200vw)", margin: "0 auto" }}>
       <input
         type="text"
-        placeholder="URL"
+        placeholder="https://..."
         value={url}
         onChange={(e) => setURL(e.target.value)}
         style={{ width: "100%" }}
