@@ -52,6 +52,12 @@ export function Entry() {
   async function handleInsert() {
     if (!backend || !identity) return;
 
+    // Prevent empty entries
+    if (!url.trim()) {
+      alert("Please enter a URL.");
+      return;
+    }
+
     // Automatically prepend "https://" if URL does not start with "http://" or "https://"
     const formattedUrl = /^(http:\/\/|https:\/\/)/.test(url) ? url : `https://${url}`;
 
@@ -209,26 +215,37 @@ export function Entry() {
 
   return (
     <div className="entry-container" style={{ maxWidth: "100vw", width: "min(100%, 200vw)", margin: "0 auto" }}>
-      <input
-        type="text"
-        placeholder="https://..."
-        value={url}
-        onChange={(e) => setURL(e.target.value)}
-        style={{ width: "100%" }}
-      />
-      <button onClick={handleInsert}>Save</button>
+      <div
+        style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", maxWidth: "600px", width: "100%" }}
+      >
+        <input
+          type="text"
+          placeholder="https://..."
+          value={url}
+          onChange={(e) => setURL(e.target.value)}
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              handleInsert();
+            }
+          }}
+          style={{ width: "100%", maxWidth: "600px" }}
+        />
+        <button onClick={handleInsert} style={{ marginTop: "0.5rem" }}>
+          Save
+        </button>
+      </div>
 
       <div>
-        <button onClick={handleSortByClickCount} style={{ margin: "1rem" }}>
+        <button onClick={handleSortByClickCount} style={{ margin: "0.5rem" }}>
           Count {isCountAscending ? "↑" : "↓"} {/* Display Count ↑ or ↓ based on click count sort order */}
         </button>
-        <button onClick={handleSortByLastVisit} style={{ margin: "1rem" }}>
+        <button onClick={handleSortByLastVisit} style={{ margin: "0.5rem" }}>
           Last Visit {isLastVisitAscending ? "↑" : "↓"} {/* Display Last Visit ↑ or ↓ based on last visit sort order */}
         </button>
-        <button onClick={handleSortAlphabetically} style={{ margin: "1rem" }}>
+        <button onClick={handleSortAlphabetically} style={{ margin: "0.5rem" }}>
           {isAscending ? "ABC" : "ZYX"} {/* Display ABC or ZYX based on alphabetical sort order */}
         </button>
-        <button onClick={handleToggleEdit} style={{ margin: "1rem" }}>
+        <button onClick={handleToggleEdit} style={{ margin: "0.5rem" }}>
           {isEditMode ? "Save" : "Edit"}
         </button>
         {entries.length > 0 ? (
@@ -246,7 +263,7 @@ export function Entry() {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => handleClickCountIncrement(entry.url)}
-                    style={{ flex: 1, width: "100%" }}
+                    style={{ flex: "none" }} // Remove width: "100%" here to make clickable area match text
                   >
                     {formatUrl(entry.url)} ({entry.clickCount.toString()}, {formatElapsedTime(entry.lastClicked)})
                   </a>
