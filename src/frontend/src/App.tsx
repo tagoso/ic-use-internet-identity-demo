@@ -11,9 +11,11 @@ function App() {
 
   return (
     <div className="flex flex-col w-full gap-5 p-10 font-sans text-base items-start">
-      <LoginButton />
-      {!identity && <div className="text-center">You are not logged in.</div>}
-      {identity && <Principal principal={principal} />}
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <LoginButton />
+        {!identity && <div className="text-center">You are not logged in.</div>}
+        {identity && <Principal principal={principal} />}
+      </div>
       {identity && <Entry />}
     </div>
   );
