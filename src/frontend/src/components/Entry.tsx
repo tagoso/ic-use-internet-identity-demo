@@ -196,6 +196,16 @@ export function Entry() {
     }
   };
 
+  // Random shuffle entires
+  const handleShuffle = () => {
+    const shuffledEntries = [...entries];
+    for (let i = shuffledEntries.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledEntries[i], shuffledEntries[j]] = [shuffledEntries[j], shuffledEntries[i]];
+    }
+    setEntries(shuffledEntries);
+  };
+
   // Save all edits for each entry
   const saveAllEdits = () => {
     setEntries((prevEntries) =>
@@ -236,14 +246,17 @@ export function Entry() {
       </div>
 
       <div>
-        <button onClick={handleSortByClickCount} style={{ margin: "0.5rem" }}>
+        <button onClick={handleSortByClickCount} style={{ margin: "0.5rem", marginLeft: "0rem" }}>
           Count {isCountAscending ? "↑" : "↓"} {/* Display Count ↑ or ↓ based on click count sort order */}
         </button>
         <button onClick={handleSortByLastVisit} style={{ margin: "0.5rem" }}>
           Last Visit {isLastVisitAscending ? "↑" : "↓"} {/* Display Last Visit ↑ or ↓ based on last visit sort order */}
         </button>
         <button onClick={handleSortAlphabetically} style={{ margin: "0.5rem" }}>
-          {isAscending ? "ABC" : "ZYX"} {/* Display ABC or ZYX based on alphabetical sort order */}
+          {isAscending ? "ABC" : "CBA"} {/* Display ABC or CBA based on alphabetical sort order */}
+        </button>
+        <button onClick={handleShuffle} style={{ margin: "0.5rem" }}>
+          🔀
         </button>
         <button onClick={handleToggleEdit} style={{ margin: "0.5rem" }}>
           {isEditMode ? "Save" : "Edit"}
@@ -263,9 +276,18 @@ export function Entry() {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => handleClickCountIncrement(entry.url)}
-                    style={{ flex: "none" }} // Remove width: "100%" here to make clickable area match text
+                    style={{
+                      flex: "none",
+                      wordWrap: "break-word",
+                      wordBreak: "break-all",
+                      maxWidth: "100%",
+                      display: "inline-block",
+                    }}
                   >
-                    {formatUrl(entry.url)} ({entry.clickCount.toString()}, {formatElapsedTime(entry.lastClicked)})
+                    {formatUrl(entry.url)}{" "}
+                    <span style={{ color: "lightgrey" }}>
+                      ({entry.clickCount.toString()}, {formatElapsedTime(entry.lastClicked)})
+                    </span>
                   </a>
                 ) : (
                   <input
