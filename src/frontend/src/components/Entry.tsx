@@ -285,7 +285,7 @@ export function Entry() {
                     }}
                   >
                     {formatUrl(entry.url)}{" "}
-                    <span style={{ color: "lightgrey" }}>
+                    <span className="text-sm text-gray-400">
                       ({entry.clickCount.toString()}, {formatElapsedTime(entry.lastClicked)})
                     </span>
                   </a>
