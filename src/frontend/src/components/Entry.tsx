@@ -17,7 +17,7 @@ export function Entry() {
   const [url, setURL] = useState<string>(""); // Single input field for URL
   const [entries, setEntries] = useState<Entry[]>([]); // State to hold all entries
   const [isAscending, setIsAscending] = useState<boolean>(true); // State to track alphabetical sort order
-  const [isCountAscending, setIsCountAscending] = useState<boolean>(true); // State to track click count sort order
+  const [isCountAscending, setIsCountAscending] = useState<boolean>(false); // State to track click count sort order
   const [isLastVisitAscending, setIsLastVisitAscending] = useState<boolean>(true); // State to track last visit sort order
 
   const [isEditMode, setIsEditMode] = useState<boolean>(false); // State to track display mode (original or formatted)
@@ -247,7 +247,7 @@ export function Entry() {
 
       <div>
         <button onClick={handleSortByClickCount} style={{ margin: "0.5rem", marginLeft: "0rem" }}>
-          Count {isCountAscending ? "↑" : "↓"} {/* Display Count ↑ or ↓ based on click count sort order */}
+          Count {isCountAscending ? "↓" : "↑"} {/* Display Count ↑ or ↓ based on click count sort order */}
         </button>
         <button onClick={handleSortByLastVisit} style={{ margin: "0.5rem" }}>
           Last Visit {isLastVisitAscending ? "↑" : "↓"} {/* Display Last Visit ↑ or ↓ based on last visit sort order */}
@@ -295,7 +295,7 @@ export function Entry() {
                     value={editedEntries[index] ?? entry.url}
                     onChange={(e) => handleEditChange(index, e.target.value)}
                     onBlur={() => handleBlurSave(index)}
-                    style={{ flex: 1, width: "100%" }}
+                    style={{ flex: 1, width: "100%", maxWidth: "600px" }}
                   />
                 )}
               </li>
